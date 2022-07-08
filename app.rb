@@ -3,17 +3,10 @@
 require 'sinatra'
 require 'sinatra/reloader' # この行を追加。 sinatra-contrib はこのために必要
 require 'erb'
-require 'pg'
-
-DB = 'memoapp'
-
-configure do
-  set :db, PG::Connection.new(dbname: DB)
-end
 
 before '/*' do
-  @memo_db = settings.db
-  @all_memos = @memo_db.exec('SELECT * FROM memo ORDER BY created_at;')
+  # @memo_db = settings.db
+  # @all_memos = @memo_db.exec('SELECT * FROM memo ORDER BY created_at;')
 end
 
 helpers do
