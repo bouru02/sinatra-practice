@@ -12,8 +12,8 @@ configure do
 end
 
 before '/*' do
-  @memo_db = setting.db
-  @all_memos = @mymemo_db.exec('SELECT * FROM memo ORDER BY created_at;')
+  @memo_db = settings.db
+  @all_memos = @memo_db.exec('SELECT * FROM memo ORDER BY created_at;')
 end
 
 helpers do

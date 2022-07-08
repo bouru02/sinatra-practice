@@ -1,1 +1,7 @@
-<%= p @all_memos %>
+<ul>
+    <li>
+        <% @all_memos.each do |memo| %>
+        <%= memo['content'] %>
+        <% end %>
+    </li>
+</ul>
