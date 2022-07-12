@@ -1,0 +1,11 @@
+<div class="p-memo">
+    <h2 class="p-memo--title"><%= @memo['title'] %></h2>
+    <p class="p-memo--text"><%= @memo['content'].gsub(/\n/, '<br/>') %></p>
+    <div class="p-memo--btns">
+        <a href="/memos/<%= @memo['id'] %>/edit" class="c-btn1">変更</a><!-- /.c-btn1 -->
+        <form action="/memos/<%= @memo['id'] %>" method="post">
+            <input type="submit" value="削除" class="c-btn1">
+            <input type="hidden" name="_method" value="delete">
+        </form>
+    </div><!-- /.p-memo--btns -->
+</div><!-- /.p-memo -->

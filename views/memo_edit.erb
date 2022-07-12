@@ -1,0 +1,11 @@
+<div class="p-memo">
+    <form action="/memos/<%= @memo['id'] %>" method="post">
+        <h2 class="p-memo--title"><input type="text" name="title" value="<%= @memo['title'] %>" required></h2>
+        <p class="p-memo--text"><textarea name="content" cols="30"
+                rows="10" required><%= @memo['content'] %></textarea></p>
+        <div class="p-memo--btns">
+            <input type="submit" value="変更" class="c-btn1">
+            <input type="hidden" name="_method" value="put">
+        </div><!-- /.p-memo--btns -->
+    </form>
+</div><!-- /.p-memo -->
