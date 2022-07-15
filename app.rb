@@ -7,9 +7,7 @@ require 'json'
 
 before '/*' do
   @memo_db_path = 'json/db.json'
-  @memo_db = Kernel.open(@memo_db_path) do |io|
-    JSON.load(io)
-  end
+  @memo_db = JSON.parse(open(@memo_db_path).read)
   @all_memos = @memo_db['memos']
 end
 
@@ -60,7 +58,7 @@ delete '/memos/:id' do
   redirect to('/')
 end
 
-put '/memos/:id' do
+patch '/memos/:id' do
   new_memo = { 'id' => params[:id], 'title' => escape(params[:title]), 'content' => escape(params[:content]) }
   target_memo_index = params[:id].to_i - 1
   @all_memos[target_memo_index] = new_memo
