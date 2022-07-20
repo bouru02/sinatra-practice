@@ -1,6 +1,6 @@
 <div class="p-memo">
-    <h2 class="p-memo--title"><%= @memo['title'] %></h2>
-    <p class="p-memo--text"><%= @memo['content'].gsub(/\n/, '<br/>') %></p>
+    <h2 class="p-memo--title"><%= escape(@memo['title']) %></h2>
+    <p class="p-memo--text"><%= escape(@memo['content']).gsub(/\n/, '<br/>') %></p>
     <div class="p-memo--btns">
         <a href="/memos/<%= @memo['id'] %>/edit" class="c-btn1">変更</a><!-- /.c-btn1 -->
         <form action="/memos/<%= @memo['id'] %>" method="post">

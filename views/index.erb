@@ -1,11 +1,11 @@
 <div class="p-frontpage">
     <div class="p-frontpage--btn">
-        <a href="/form" class="c-btn1">追加</a><!-- /.c-btn1 -->
+        <a href="/memos/new" class="c-btn1">追加</a><!-- /.c-btn1 -->
     </div><!-- /.p-frontpage--btn -->
     <div class="p-frontpage--list">
         <ul class="c-list1">
             <% @all_memos.each do |memo| %>
-            <li class="c-list1--item"><a href="/memos/<%= memo['id'] %>"><%= memo['title'] %></a></li>
+            <li class="c-list1--item"><a href="/memos/<%= memo['id'] %>"><%= escape(memo['title']) %></a></li>
             <% end %>
         </ul>
     </div>
