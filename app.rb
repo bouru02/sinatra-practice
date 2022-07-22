@@ -36,7 +36,7 @@ get '/memos/new' do
 end
 
 post '/memos' do
-  @memo_db.exec("INSERT into memo (title,content) values ('#{params[:title]}','#{params[:content]}');")
+  @memo_db.exec('INSERT into memo (title,content) values ($1, $2);', [params[:title], params[:content]])
   redirect to('/')
 end
 
@@ -46,13 +46,14 @@ get '/memos/:id' do
 end
 
 delete '/memos/:id' do
-  @memo_db.exec("DELETE from memo WHERE id = #{params[:id]};")
+  @memo_db.exec('DELETE from memo WHERE id = $1;', [params[:id]])
   redirect to('/')
 end
 
 patch '/memos/:id' do
+  p @memo
   new_memo = { id: params[:id], title: params[:title], content: params[:content] }
-  @memo_db.exec("UPDATE memo SET title = '#{new_memo[:title]}', content = '#{new_memo[:content]}' WHERE id = #{new_memo[:id]};")
+  @memo_db.exec('UPDATE memo SET title = $2, content = $3 WHERE id = $1;', new_memo.values)
   redirect to('/')
 end
 
