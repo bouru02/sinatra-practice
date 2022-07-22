@@ -1,14 +1,20 @@
 # frozen_string_literal: true
 
 require 'sinatra'
-require 'sinatra/reloader' # この行を追加。 sinatra-contrib はこのために必要
+require 'sinatra/reloader'
 require 'erb'
 require 'json'
+require 'pg'
+
+DB = 'memoapp'
+
+configure do
+  set :db, PG::Connection.new(dbname: DB)
+end
 
 before '/*' do
-  @memo_db_path = 'json/db.json'
-  @memo_db = JSON.parse(File.open(@memo_db_path).read)
-  @all_memos = @memo_db['memos']
+  @memo_db = setting.db
+  @all_memos = @memo_db.exec('SELECT * FROM memo ORDER BY created_at;')
 end
 
 def get_the_memo(memo_id)
