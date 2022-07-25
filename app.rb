@@ -1,24 +1,24 @@
 # frozen_string_literal: true
 
 require 'sinatra'
-require 'sinatra/reloader' # この行を追加。 sinatra-contrib はこのために必要
+require 'sinatra/reloader'
 require 'erb'
 require 'json'
+require 'pg'
+
+DB = 'memoapp'
+
+configure do
+  set :db, PG::Connection.new(dbname: DB)
+end
 
 before '/*' do
-  @memo_db_path = 'json/db.json'
-  @memo_db = JSON.parse(File.open(@memo_db_path).read)
-  @all_memos = @memo_db['memos']
+  @memo_db = settings.db
+  @all_memos = @memo_db.exec('SELECT * FROM memo ORDER BY id;')
 end
 
 def get_the_memo(memo_id)
   @all_memos.find { |memo| memo['id'].to_s == memo_id.to_s }
-end
-
-def update_memos
-  File.open(@memo_db_path, 'w') do |file|
-    JSON.dump(@memo_db, file)
-  end
 end
 
 helpers do
@@ -36,10 +36,7 @@ get '/memos/new' do
 end
 
 post '/memos' do
-  new_memo_id = @all_memos.length + 1
-  new_memo = { id: new_memo_id, title: params[:title], content: params[:content] }
-  @all_memos.push(new_memo)
-  update_memos
+  @memo_db.exec('INSERT into memo (title,content) values ($1, $2);', [params[:title], params[:content]])
   redirect to('/')
 end
 
@@ -49,18 +46,14 @@ get '/memos/:id' do
 end
 
 delete '/memos/:id' do
-  @all_memos.delete_if do |memo|
-    memo['id'].to_s == params[:id]
-  end
-  update_memos
+  @memo_db.exec('DELETE from memo WHERE id = $1;', [params[:id]])
   redirect to('/')
 end
 
 patch '/memos/:id' do
+  p @memo
   new_memo = { id: params[:id], title: params[:title], content: params[:content] }
-  target_memo_index = params[:id].to_i - 1
-  @all_memos[target_memo_index] = new_memo
-  update_memos
+  @memo_db.exec('UPDATE memo SET title = $2, content = $3 WHERE id = $1;', new_memo.values)
   redirect to('/')
 end
 
