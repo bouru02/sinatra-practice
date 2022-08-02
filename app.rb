@@ -52,6 +52,6 @@ patch '/memos/:id' do
 end
 
 get '/memos/:id/edit' do
-  @memo = get_the_memo(params[:id])
+  @memo = @memo_db.exec('SELECT * FROM memo WHERE id = $1;', [params[:id]])[0]
   erb :memo_edit
 end
